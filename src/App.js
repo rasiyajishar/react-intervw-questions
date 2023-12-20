@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
 
-function App() {
+
+export default function App() {
+  const [pincodedata, setPincodeData] = useState([]);
+
+  useEffect(() => {
+    const url = "https://api.postalpincode.in/pincode/679511";
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => setPincodeData(data[0]?.PostOffice || []))
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Pincode Data:</h1>
+      {pincodedata.length > 0 ? (
+        <ul>
+          {pincodedata.map((item, index) => (
+            <li key={index}>{JSON.stringify(item)}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
+  
 }
-
-export default App;
